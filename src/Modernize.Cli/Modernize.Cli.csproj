@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <PackAsTool>true</PackAsTool>
+    <ToolCommandName>modernize</ToolCommandName>
+    <PackageId>LegacyDotnetModernizationKit</PackageId>
+    <Version>1.0.0</Version>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <NoWarn>$(NoWarn);CA1303</NoWarn>
+  </PropertyGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="Modernize.Tests" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="../Modernize/Modernize.csproj" />
+  </ItemGroup>
+</Project>
