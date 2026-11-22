@@ -1,0 +1,34 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 10.0.x
+      - run: dotnet restore
+      - run: dotnet build --no-restore -c Release
+      - run: dotnet test --no-build -c Release --logger "console;verbosity=normal"
+      - name: Scan the LegacyShop fixture (expects blockers, exit code 1)
+        run: |
+          set +e
+          dotnet src/Modernize.Cli/bin/Release/net10.0/Modernize.Cli.dll scan examples/LegacyShop --as-of 2026-11-22 > report.md
+          code=$?
+          set -e
+          test "$code" -eq 1
+          cat report.md >> "$GITHUB_STEP_SUMMARY"
+      - name: Rules document is up to date
+        run: |
+          { echo "# Rules"; echo; echo 'Generated with `modernize rules`. Severity drives the readiness score and the `--fail-on` gate.'; echo; dotnet src/Modernize.Cli/bin/Release/net10.0/Modernize.Cli.dll rules; } > /tmp/rules.md
+          diff -u docs/rules.md /tmp/rules.md
+      - run: dotnet pack src/Modernize.Cli -c Release --no-build -o artifacts
