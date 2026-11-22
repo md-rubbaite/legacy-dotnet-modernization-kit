@@ -1,0 +1,9 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>Modernize</RootNamespace>
+    <Description>Static assessment of .NET Framework and out-of-support .NET codebases: blockers, effort, migration waves; Markdown, JSON and SARIF reports.</Description>
+  </PropertyGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="Modernize.Tests" />
+  </ItemGroup>
+</Project>
