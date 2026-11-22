@@ -1,0 +1,33 @@
+# Example workflow for YOUR repository: scan on every pull request, show findings in code scanning,
+# fail when blockers appear. Copy to .github/workflows/modernize.yml.
+name: modernize
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+  security-events: write
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 10.0.x
+      - name: Build the scanner
+        run: |
+          git clone --depth 1 --branch v1.0.0 https://github.com/md-rubbaite/legacy-dotnet-modernization-kit /tmp/ldmk
+          dotnet build /tmp/ldmk/src/Modernize.Cli -c Release
+      - name: Scan
+        run: dotnet /tmp/ldmk/src/Modernize.Cli/bin/Release/net10.0/Modernize.Cli.dll scan . --format sarif --out modernize.sarif --fail-on blocker
+      - name: Upload to code scanning
+        if: always()
+        uses: github/codeql-action/upload-sarif@v4
+        with:
+          sarif_file: modernize.sarif
+          category: modernize
