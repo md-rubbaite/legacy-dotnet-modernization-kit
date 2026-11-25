@@ -122,4 +122,6 @@ Built by **Rubbaite T. Hassain**, Software Architect and founder of
 fintech and healthcare: assessment, strangler-fig delivery and cut-over. Get in touch if you want
 this applied to your estate.
 
+Architecture, requirements and review by Rubbaite T. Hassain; implementation AI-assisted.
+
 MIT licensed.
